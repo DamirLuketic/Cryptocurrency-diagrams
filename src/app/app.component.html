@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="row">
+        <form [formGroup]="cryptoForm" (ngSubmit)="submitForm()">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="center-block">Cryptocurrency
+                        <select class="form-control" formControlName="cryptoSelect">
+                            <option *ngFor="let c of cryptoData; let i = index" [value]="c?.name">{{ c?.name }}</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="center-block">Start date:
+                        <input type="date" class="form-control" min="2000-01-01" max="{{ currentDate() }}" formControlName="dateStart">
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="center-block">End date:
+                        <input type="date" class="form-control" max="{{ currentDate() }}" formControlName="dateEnd">
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="center-block">Submit
+                        <input type="submit" class="btn btn-primary form-control" value="Submit">
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <app-d3 [currentData]="currentData"></app-d3>
+
+    <div class="row">
+        <table id="dataShow">
+            <tr>
+                <th>Date</th>
+                <th>Price {{ compareCurrency != null ? '(' + compareCurrency + ')' : '' }}</th>
+            </tr>
+            <tr *ngFor="let c of currentData">
+                <td>{{ c[0] | date : 'mediumDate' }}</td>
+                <td>{{ c[1] | currency : compareCurrency }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
