@@ -1,6 +1,8 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import 'd3';
 import 'nvd3';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
 declare let d3: any;
 
 @Component({
@@ -18,6 +20,7 @@ declare let d3: any;
 })
 
 export class D3Component implements OnInit {
+    public options;
     private _currentData;
     @Input()
     set currentData(currentData) {
@@ -25,19 +28,17 @@ export class D3Component implements OnInit {
     }
     currentDataFunc() {
         const data = [];
-        for(let c of this._currentData) {
+        for (const c of this._currentData) {
             data.push({label: c[0], value: c[1]});
         }
         return data;
     }
-    public options;
     data() {
         return [{
             key: 'Cumulative Return',
             values: this.currentDataFunc()
         }];
     }
-
     ngOnInit() {
         this.options = {
             chart: {
@@ -49,18 +50,18 @@ export class D3Component implements OnInit {
                     bottom: 50,
                     left: 55
                 },
-                x: function(d){return d.label;},
-                y: function(d){return d.value;},
+                x: function(d) {return d.label; },
+                y: function(d) {return d.value; },
                 showValues: true,
-                valueFormat: function(d){
-                    return d3.format(',.4f')(d);
+                valueFormat: function(d) {
+                    return d3.format(',.2f')(d);
                 },
-                duration: 200,
+                duration: 150,
                 xAxis: {
                     axisLabel: 'Date'
                 },
                 yAxis: {
-                    // axisLabel: 'Price',
+                    axisLabel: 'Price',
                     // axisLabelDistance: -10
                 }
             }

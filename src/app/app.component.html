@@ -6,28 +6,56 @@
                     <label class="center-block">Cryptocurrency
                         <select class="form-control" formControlName="cryptoSelect">
                             <option *ngFor="let c of cryptoData; let i = index" [value]="c?.name">{{ c?.name }}</option>
+                            <!-- Add options for compare regular currency -->
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
                         </select>
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group">
-                    <label class="center-block">Start date:
-                        <input type="date" class="form-control" min="2000-01-01" max="{{ currentDate() }}" formControlName="dateStart">
+                    <label class="center-block">Compare with
+                        <select class="form-control" formControlName="compare">
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option *ngFor="let c of cryptoData; let i = index" [value]="c?.name">{{ c?.name }}</option>
+                        </select>
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="center-block">Start date:
+                        <input
+                                type="date"
+                                class="form-control"
+                                min="2000-01-01"
+                                max="{{ endDate === null ? currentDate() : endDate }}"
+                                formControlName="dateStart"
+                                (change)="startDateSubject.next($event.target.value)">
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="center-block">End date:
-                        <input type="date" class="form-control" max="{{ currentDate() }}" formControlName="dateEnd">
+                        <input
+                                type="date"
+                                class="form-control"
+                                max="{{ currentDate() }}"
+                                min="{{ startDate }}"
+                                formControlName="dateEnd"
+                                (change)="endDateSubject.next($event.target.value)">
                     </label>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="center-block">Submit
-                        <input type="submit" class="btn btn-primary form-control" value="Submit">
+                        <input type="submit" class="btn btn-primary form-control" value="Submit" [disabled]="cryptoForm.invalid">
                     </label>
                 </div>
             </div>

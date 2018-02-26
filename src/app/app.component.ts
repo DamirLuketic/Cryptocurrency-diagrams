@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit } from '@angular/core';
 import {CryptoDataService} from './shared/services/crypto-data.service';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,10 @@ export class AppComponent implements OnInit, OnDestroy {
   private cryptoDataSubscribe: Subscription = null;
   private currentDataSubscribe: Subscription = null;
   public compareCurrency: string = null;
+  private startDateSubject = new Subject();
+  private endDateSubject = new Subject();
+  private startDate = null;
+  private endDate = null;
 
   constructor(
       private cryptoDataService: CryptoDataService,
@@ -21,6 +26,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+     this.startDateSubject.subscribe(
+     (data) => { this.startDate = data; }
+     );
+     this.endDateSubject.subscribe(
+         (data) => { this.endDate = data; }
+     );
     if (this.cryptoDataService.cryptoData == null) {
         this.cryptoDataSubscribe = this.cryptoDataService.getCryptoData().subscribe(
             (data) => {
@@ -45,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public cryptoForm = this.formBuilder.group({
       cryptoSelect: ['', Validators.required],
+      compare: ['', Validators.required],
       dateStart: ['', Validators.required],
       dateEnd: ['', Validators.required]
   });
@@ -70,10 +82,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-        // Add this part
-      this.compareCurrency = 'EUR';
       this.currentData = [];
       const formData = this.cryptoForm.value;
+      this.compareCurrency = formData.compare;
       const currency = formData.cryptoSelect;
       const dateStart = new Date(formData.dateStart);
       const dateEnd = new Date(formData.dateEnd);
@@ -81,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
       for (const d of dates) {
           this.currentDataSubscribe = this.cryptoDataService.getDailyData(currency, this.compareCurrency, (d.getTime() / 1000)).subscribe(
               (data) => {
-                  this.currentData.push([d.toLocaleDateString('en-US'), +data[currency][this.compareCurrency].toFixed(1)]);
+                  this.currentData.push([d.toLocaleDateString('en-US'), data[currency][this.compareCurrency].toFixed(2)]);
               }
           );
       }

@@ -13,9 +13,3 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
-
-
-#chart path {
-    fill: transparent;
-    stroke: green;
-}
