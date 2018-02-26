@@ -1,5 +1,5 @@
-#View for personal selection of historical price data of cryptocurrency.
-#Small Angular (5) app with a usage of D3 (npm ng2-nvd3).
+# View for personal selection of historical price data of cryptocurrency.
+## Small Angular (5) app with a usage of D3 (npm ng2-nvd3).
 
 <br /><br />
 
